@@ -1,0 +1,27 @@
+{
+  "summary": "Backend smoke test for Boys Love streaming app. All 32 backend assertions passed across auth, series CRUD, episodes (with total_episodes recount + cascade delete), favorites, progress/continue-watching enrichment, reviews (with avg_rating recompute + rating validation), upload+files, and admin role enforcement.",
+  "tested_scope": ["backend", "auth", "integration"],
+  "passed": [
+    "GET /api/series public (200, list)",
+    "POST /api/series: 401 unauth, 403 non-admin, 200 admin with total_episodes=0/avg_rating=0",
+    "GET /api/series/{id} 200; invalid id -> 404",
+    "PUT /api/series/{id} admin updates fields",
+    "POST /api/episodes creates and increments series.total_episodes",
+    "GET /api/series/{id}/episodes sorted by episode_number",
+    "PUT/DELETE /api/episodes/{id} admin; total_episodes decrement on delete",
+    "DELETE /api/series cascades episodes",
+    "POST/GET/DELETE /api/favorites for regular user",
+    "POST /api/progress upsert; GET /api/progress/continue enriched with series+episode",
+    "POST /api/reviews valid; rating 6 -> 400; series.avg_rating recomputed to 5.0; GET /api/reviews?series_id=",
+    "POST /api/upload: 403 non-admin, 200 admin returns {path}; GET /api/files/{path} returns bytes (object storage integration works)",
+    "POST /api/auth/session invalid session_id -> 401",
+    "GET /api/auth/me 401 without auth, 200 with Bearer; ADMIN_EMAIL tqyisussss@gmail.com auto is_admin=true",
+    "POST /api/auth/logout deletes session (subsequent /me -> 401)"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "not tested (backend-only request)"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Sessions provisioned directly in MongoDB per /app/memory/test_credentials.md. Object storage (EMERGENT_LLM_KEY) verified end-to-end via upload + download. No blockers found."
+}

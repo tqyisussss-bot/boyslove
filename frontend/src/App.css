@@ -1,34 +1,39 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+.App {
+  min-height: 100vh;
+  background: #050505;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+.bl-hero-gradient {
+  background: linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(5,5,5,0.7) 45%, rgba(5,5,5,0.1) 100%);
+}
+.bl-hero-bottom {
+  background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5,5,5,0.6) 70%, #050505 100%);
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.bl-card {
+  transition: transform 320ms cubic-bezier(.2,.7,.2,1), border-color 320ms ease, box-shadow 320ms ease;
+  border: 1px solid transparent;
+}
+.bl-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: 0 20px 60px -20px rgba(224,122,143,0.35);
 }
 
-.App-link {
-    color: #61dafb;
+.bl-meta-glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.75) 100%);
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.bl-grain::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 3px 3px;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 }
