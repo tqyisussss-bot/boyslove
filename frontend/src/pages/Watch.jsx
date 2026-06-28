@@ -12,6 +12,25 @@ const getVimeoId = (url) => {
   return m ? m[1] : null;
 };
 
+// BitChute: https://www.bitchute.com/video/<id>/ or already /embed/<id>/
+const getBitChuteEmbed = (url) => {
+  if (!/bitchute\.com/i.test(url)) return null;
+  if (/bitchute\.com\/embed\//i.test(url)) return url;
+  const m = url.match(/bitchute\.com\/video\/([\w-]+)/i);
+  return m ? `https://www.bitchute.com/embed/${m[1]}/` : null;
+};
+
+// Rumble: https://rumble.com/v<id>-<slug>.html or already /embed/<id>/
+const getRumbleEmbed = (url) => {
+  if (!/rumble\.com/i.test(url)) return null;
+  if (/rumble\.com\/embed\//i.test(url)) return url;
+  // Page URL → extract the leading v<id> token from the slug
+  const m = url.match(/rumble\.com\/(v[\w]+)/i);
+  return m ? `https://rumble.com/embed/${m[1]}/?pub=anonymous` : null;
+};
+
+const isDirectVideoFile = (url) => /\.(mp4|webm|m3u8|mov|mkv)(\?|#|$)/i.test(url);
+
 const Watch = () => {
   const { episodeId } = useParams();
   const navigate = useNavigate();
@@ -59,6 +78,9 @@ const Watch = () => {
 
   const ytId = getYouTubeId(episode.video_url);
   const vmId = !ytId && getVimeoId(episode.video_url);
+  const bcEmbed = !ytId && !vmId && getBitChuteEmbed(episode.video_url);
+  const rmEmbed = !ytId && !vmId && !bcEmbed && getRumbleEmbed(episode.video_url);
+  const useHtml5 = !ytId && !vmId && !bcEmbed && !rmEmbed && isDirectVideoFile(episode.video_url);
 
   const currentIdx = allEpisodes.findIndex((e) => e.id === episode.id);
   const nextEp = currentIdx >= 0 ? allEpisodes[currentIdx + 1] : null;
@@ -109,7 +131,25 @@ const Watch = () => {
             allow="autoplay; fullscreen; picture-in-picture"
             allowFullScreen
           />
-        ) : (
+        ) : bcEmbed ? (
+          <iframe
+            data-testid="bitchute-player"
+            className="w-full h-full"
+            src={bcEmbed}
+            title={episode.title}
+            allow="autoplay; encrypted-media; fullscreen"
+            allowFullScreen
+          />
+        ) : rmEmbed ? (
+          <iframe
+            data-testid="rumble-player"
+            className="w-full h-full"
+            src={rmEmbed}
+            title={episode.title}
+            allow="autoplay; encrypted-media; fullscreen"
+            allowFullScreen
+          />
+        ) : useHtml5 ? (
           <video
             data-testid="video-player"
             ref={videoRef}
@@ -119,6 +159,15 @@ const Watch = () => {
             className="w-full h-full"
             onTimeUpdate={onTimeUpdate}
             onEnded={() => saveProgress(videoRef.current?.duration || 0, videoRef.current?.duration || 0)}
+          />
+        ) : (
+          <iframe
+            data-testid="generic-player"
+            className="w-full h-full"
+            src={episode.video_url}
+            title={episode.title}
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            allowFullScreen
           />
         )}
       </div>

@@ -1,0 +1,20 @@
+{
+  "summary": "Frontend video player URL detection verified on /watch/{episodeId}. All 8 URL variants render the correct iframe/video element with expected data-testid and converted src.",
+  "tested_scope": ["frontend", "integration"],
+  "passed": [
+    "BitChute page URL https://www.bitchute.com/video/ABCDxyz/ -> iframe data-testid=bitchute-player src=https://www.bitchute.com/embed/ABCDxyz/",
+    "BitChute embed URL used as-is -> data-testid=bitchute-player",
+    "Rumble page URL https://rumble.com/v3abcde-some-title.html -> data-testid=rumble-player src=https://rumble.com/embed/v3abcde/?pub=anonymous",
+    "Rumble embed URL used as-is -> data-testid=rumble-player",
+    "YouTube watch URL -> data-testid=yt-player src includes youtube.com/embed/<id>",
+    "Vimeo URL -> data-testid=vimeo-player src includes player.vimeo.com/video/<id>",
+    "Direct .mp4 URL -> <video data-testid=video-player>",
+    "Unknown URL (twitch player) -> data-testid=generic-player iframe with original src"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% (8/8 cases)"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Seeded admin user/session and 1 series + 8 episodes directly in MongoDB per /app/memory/test_credentials.md. Visited /watch/{episodeId} for each URL variant, set session_token cookie, and asserted iframe/video element existed with the expected data-testid and src attribute. No video network playback was required to validate the URL detection logic."
+}
