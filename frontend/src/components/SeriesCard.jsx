@@ -1,11 +1,9 @@
 import { Link } from "react-router-dom";
 import { Star, PlayCircle } from "lucide-react";
-import { fileUrl } from "@/lib/api";
+import { fileUrl, mediaUrl } from "@/lib/api";
 
 export const SeriesCard = ({ series, size = "md" }) => {
-  const poster = series.poster_path?.startsWith("http")
-    ? series.poster_path
-    : (series.poster_path ? fileUrl(series.poster_path) : "");
+  const poster = mediaUrl(series.poster_path);
   const widthCls = size === "lg" ? "w-52 md:w-60" : "w-40 md:w-48";
 
   return (

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api, { fileUrl } from "@/lib/api";
+import api, { fileUrl, mediaUrl } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import { Play, Sparkles, Heart, Tv } from "lucide-react";
 
@@ -97,7 +97,7 @@ const Landing = () => {
           <h2 className="font-heading text-2xl md:text-3xl font-bold mb-6 px-6 md:px-10">Un vistazo al catálogo</h2>
           <div className="flex gap-4 overflow-x-auto scrollbar-hide px-6 md:px-10">
             {series.slice(0, 12).map((s) => {
-              const poster = s.poster_path?.startsWith("http") ? s.poster_path : (s.poster_path ? fileUrl(s.poster_path) : "");
+              const poster = mediaUrl(s.poster_path);
               return (
                 <div key={s.id} data-testid={`landing-series-${s.id}`} className="w-40 md:w-48 shrink-0 rounded-xl overflow-hidden bg-neutral-900 bl-card">
                   <div className="aspect-[2/3] bg-neutral-800">

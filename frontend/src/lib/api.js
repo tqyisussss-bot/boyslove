@@ -10,5 +10,12 @@ const api = axios.create({
 
 export default api;
 
-// Public URL helper for posters/thumbnails served from storage
+// Public URL helper for posters/thumbnails served from storage.
+// Accepts either an external http(s) URL or a storage path.
 export const fileUrl = (path) => (path ? `${API}/files/${path}` : "");
+
+export const mediaUrl = (path) => {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return fileUrl(path);
+};

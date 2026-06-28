@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api, { fileUrl } from "@/lib/api";
+import api, { fileUrl, mediaUrl } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -333,7 +333,7 @@ const SeriesDialog = ({ open, setOpen, editing, onSaved }) => {
 };
 
 const ImageUpload = ({ label, path, onFile, onClear, uploading, testid }) => {
-  const url = path?.startsWith("http") ? path : (path ? fileUrl(path) : "");
+  const url = mediaUrl(path);
   return (
     <div>
       <Label className="text-xs uppercase tracking-wider text-neutral-400">{label}</Label>
@@ -471,7 +471,7 @@ const EpisodesAdmin = ({ series, episodes, refresh }) => {
                 {uploading ? "Subiendo…" : (form.thumbnail_path ? "Reemplazar imagen" : "Subir miniatura")}
               </label>
               {form.thumbnail_path && (
-                <img src={form.thumbnail_path.startsWith("http") ? form.thumbnail_path : fileUrl(form.thumbnail_path)} alt="" className="mt-2 max-w-xs rounded-md" />
+                <img src={mediaUrl(form.thumbnail_path)} alt="" className="mt-2 max-w-xs rounded-md" />
               )}
             </div>
           </div>

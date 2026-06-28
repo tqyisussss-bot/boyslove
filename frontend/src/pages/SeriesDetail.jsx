@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import api, { fileUrl } from "@/lib/api";
+import api, { fileUrl, mediaUrl } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import { Play, Plus, Check, Star, Calendar, Globe2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -70,10 +70,8 @@ const SeriesDetail = () => {
     );
   }
 
-  const backdrop = series.backdrop_path?.startsWith("http")
-    ? series.backdrop_path
-    : (series.backdrop_path ? fileUrl(series.backdrop_path) : (series.poster_path?.startsWith("http") ? series.poster_path : (series.poster_path ? fileUrl(series.poster_path) : "")));
-  const poster = series.poster_path?.startsWith("http") ? series.poster_path : (series.poster_path ? fileUrl(series.poster_path) : "");
+  const backdrop = mediaUrl(series.backdrop_path) || mediaUrl(series.poster_path);
+  const poster = mediaUrl(series.poster_path);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white">
@@ -154,7 +152,7 @@ const SeriesDetail = () => {
           ) : (
             <div className="grid gap-3">
               {episodes.map((ep) => {
-                const thumb = ep.thumbnail_path?.startsWith("http") ? ep.thumbnail_path : (ep.thumbnail_path ? fileUrl(ep.thumbnail_path) : poster);
+                const thumb = mediaUrl(ep.thumbnail_path) || poster;
                 return (
                   <Link
                     key={ep.id}

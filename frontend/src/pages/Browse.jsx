@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api, { fileUrl } from "@/lib/api";
+import api, { mediaUrl } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import SeriesRow from "@/components/SeriesRow";
 import { Play, Info, Search } from "lucide-react";
@@ -23,9 +23,7 @@ const Browse = () => {
     api.get("/progress/continue").then((r) => setContinueList(r.data)).catch(() => {});
   }, []);
 
-  const heroPoster = featured?.backdrop_path?.startsWith("http")
-    ? featured.backdrop_path
-    : (featured?.backdrop_path ? fileUrl(featured.backdrop_path) : (featured?.poster_path?.startsWith("http") ? featured.poster_path : (featured?.poster_path ? fileUrl(featured.poster_path) : "")));
+  const heroPoster = mediaUrl(featured?.backdrop_path) || mediaUrl(featured?.poster_path);
 
   const filtered = query
     ? series.filter((s) => s.title.toLowerCase().includes(query.toLowerCase()))
@@ -82,7 +80,7 @@ const Browse = () => {
               {continueList.map((item) => {
                 const s = item.series;
                 const ep = item.episode;
-                const poster = s.poster_path?.startsWith("http") ? s.poster_path : (s.poster_path ? fileUrl(s.poster_path) : "");
+                const poster = mediaUrl(s.poster_path);
                 const pct = item.progress.duration > 0 ? Math.min(100, (item.progress.position / item.progress.duration) * 100) : 0;
                 return (
                   <Link
